@@ -1,0 +1,15 @@
+{
+  "directory": "app/",
+  "name": "nomumo",
+  "homepage": "https://github.com/danielbeicht/nomumo",
+  "authors": [
+    "Daniel <danielbeicht@mz-host.de>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "dependencies": {
+    "angular-translate": "^2.11.1",
+    "angular-clipboard": "^1.4.2"
+  }
+}

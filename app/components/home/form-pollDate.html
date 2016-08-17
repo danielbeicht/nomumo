@@ -1,0 +1,39 @@
+<div class="alert alert-warning" ng-show="warningMessage">
+    {{ warningText }}
+</div>
+<h4>{{ 'FORM_DATE_TEXT' | translate }}</h4>
+
+<table class='table borderless'>
+    <tr>
+        <td>
+            <div style="display:inline-block; min-height:290px;">
+                <div uib-datepicker="dd/MM/yyyy" ng-model="formData.dt" class="well well-sm"
+                     datepicker-options="{startingDay: 1}"></div>
+            </div>
+        </td>
+        <td>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>{{ 'FORM_DATE_DELETE' | translate }}</th>
+                    <th>{{ 'FORM_DATE_DATE' | translate }}</th>
+                </tr>
+                </thead>
+                <tr ng-repeat="date in formData.dates">
+                    <td><span class="glyphicon glyphicon-trash hoverred" ng-click="removeDate(date)"
+                              style="cursor: pointer;"></span></td>
+                    <td>{{ date.date }}</td>
+                </tr>
+            </table>
+        </td>
+
+    </tr>
+
+</table>
+
+<div class="form-group row">
+    <div class="col-xs-6 col-xs-offset-3">
+        <button type="submit" class="btn btn-block btn-info" ng-click="goToUhrzeit()">{{ 'BUTTON_NEXT_STEP' | translate }} <span
+                class="glyphicon glyphicon-circle-arrow-right"></span></button>
+    </div>
+</div>

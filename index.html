@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html ng-app="nomumo" lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>nomumo</title>
+    <base href="/"/>
+    <link rel="icon" type="image/vnd.microsoft.icon" href="/assets/img/favicon.ico">
+
+    <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//phpfiles.mz-host.de/";
+            _paq.push(["setTrackerUrl", u+"status.php"]);
+            _paq.push(["setSiteId", "1"]);
+            var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];
+            g.type="text/javascript"; g.async=true; g.defer=true; g.src=u+"status.php"; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+
+</head>
+<link rel="stylesheet" href="assets/css/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/autocomplete.css">
+
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">nomumo</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li ui-sref-active="active"><a ui-sref="home.pollInfos">{{ 'NAV_NEW_POLL' | translate }}</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" id="limit">
+    <div ui-view></div>
+</div>
+<footer class="footer">
+    <div class="container text-center">
+        <p class="text-muted">
+            <select name="singleSelect" ng-model="language" class="classgreybackgroundgreycolor">
+                <option value="" disabled selected>{{ 'LAN' | translate }}</option>
+                <option value="en_US">{{ 'LAN_ENG' | translate }}</option>
+                <option value="de_DE">{{ 'LAN_DE' | translate }}</option>
+                <option value="eo">{{ 'LAN_EO' | translate }}</option>
+            </select>
+            &nbsp;&nbsp;An <a href="https://github.com/danielbeicht/nomumo">open source</a> volunteer project &#9679; Privacy/Terms &#9679; Hosted by <a href="https://www.mz-host.de">mz-host.de</a>
+        </p>
+    </div>
+</footer>
+
+
+
+
+<script src="assets/libs/angular.min.js"></script>
+<script src="assets/libs/angular-ui-router.min.js"></script>
+<script src="assets/libs/angular-animate.js"></script>
+<script src="assets/libs/ngRoute.js"></script>
+<script src="assets/libs/ui-bootstrap-tpls-2.0.0.min.js"></script>
+<script src="assets/libs/angular-clipboard/angular-clipboard.js"></script>
+<script src="assets/libs/angular-translate/angular-translate.min.js"></script>
+
+<script src="app/app.module.js"></script>
+<script src="app/app.routes.js"></script>
+<script src="app/app.config.js"></script>
+
+<script src="app/components/home/homeCtrl.js"></script>
+<script src="app/components/poll/pollCtrl.js"></script>
+<script src="app/components/created/createdCtrl.js"></script>
+<script src="app/components/unsubscribe/unsubscribeCtrl.js"></script>
+<script src="app/components/about/aboutCtrl.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM7u05g7vTKUIL10zhMw8mLpZZSogsBYA&signed_in=true&libraries=places"></script>
+<script src="/assets/libs/autocomplete.js"></script>
+
+
+</body>
+</html>

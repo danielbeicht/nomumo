@@ -1,0 +1,56 @@
+<form>
+</form>
+<form name="pollInfosForm1" id="pollInfosForm1" ng-submit="goToDatum(pollInfosForm1.$valid)">
+    <div class="form-group has-error">
+        <label>{{ 'FORM_TITLE' | translate }}</label> <span
+            ng-class="pollInfosForm1.title.$valid ? 'glyphicon glyphicon-asterisk' : 'glyphicon glyphicon-asterisk classred'"></span>
+        <input class="form-control" type="text" name="title" ng-model="formData.title" ng-required="true"
+               ng-maxlength="80">
+    </div>
+
+    <div class="form-group">
+        <label for="ort">{{ 'FORM_LOCATION' | translate }}</label> (via Google Maps)
+        <input type="text" g-places-autocomplete class="form-control" name="ort" ng-model="formData.location" ng-required="false"
+               ng-maxlength="80">
+    </div>
+
+    <div class="form-group">
+        <label for="beschreibung">{{ 'FORM_DESCRIPTION' | translate }}</label>
+        <textarea class="form-control noresize" rows="5" name="beschreibung" ng-model="formData.description"
+                  ng-required="false" ng-maxlength="5000"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="name">{{ 'FORM_NAME' | translate }}</label> <span
+            ng-class="pollInfosForm1.name.$valid ? 'glyphicon glyphicon-asterisk' : 'glyphicon glyphicon-asterisk classred'"></span>
+        <input type="text" class="form-control" name="name" ng-model="formData.name" ng-required="true"
+               ng-maxlength="80">
+    </div>
+
+    <div class="form-group">
+        <label for="email">{{ 'FORM_EMAIL' | translate }}</label> <span
+            ng-class="pollInfosForm1.email.$valid ? 'glyphicon glyphicon-asterisk' : 'glyphicon glyphicon-asterisk classred'"></span>
+        <input class="form-control" type="email" name="email" ng-model="formData.email" ng-required="true"
+               ng-maxlength="45" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/">
+    </div>
+<br>
+    <label>{{ 'FORM_POLL_MODE' | translate }}</label>
+    <table class='table borderless'>
+        <tr>
+            <td><label>{{ 'FORM_POLL_MODE1' | translate }}<br><input type="radio" ng-model="formData.maybe" value="1"> <img ng-src="assets/img/pollMode1_{{getPollModeImageLocation()}}.png" width="400px" alt="Poll Mode 1" ng-style="{opacity : ((formData.maybe == 1) && '1') || '0.4'}" style="cursor: pointer;"></label></td>
+            <td><label>{{ 'FORM_POLL_MODE2' | translate }}<br><input type="radio" ng-model="formData.maybe" value="2"> <img ng-src="assets/img/pollMode2_{{getPollModeImageLocation()}}.png" width="400px" alt="Poll Mode 2" ng-style="{opacity : ((formData.maybe == 2) && '1') || '0.4'}" style="cursor: pointer;"></label></td>
+        </tr>
+        <tr>
+            <td><label>{{ 'FORM_POLL_MODE0' | translate }}<br><input type="radio" ng-model="formData.maybe" value="0"> <img src="assets/img/pollMode0.png" width="400px" alt="Poll Mode 0" ng-style="{opacity : ((formData.maybe == 0) && '1') || '0.4'}" style="cursor: pointer;"></label></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+    <div class="form-group row">
+        <div class="col-xs-6 col-xs-offset-3">
+            <button type="submit" class="btn btn-block btn-info">{{ 'BUTTON_NEXT_STEP' | translate }} <span
+                    class="glyphicon glyphicon-circle-arrow-right"></span></button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-12">
+        <div id="form-container">
+            <div class="page-header text-center">
+                <h1>nomumo</h1>
+
+                <div id="status-buttons" class="text-center">
+                    <a ui-sref-active="active" ui-sref=".pollInfos"><span>1</span> {{ 'TITLE_POLLDETAILS' | translate }}</a>
+                    <a ui-sref-active="active" ui-sref=".pollDate"><span>2</span> {{ 'TITLE_DATE' | translate }}</a>
+                    <a ui-sref-active="active" ui-sref=".pollDateTime"><span>3</span> {{ 'TITLE_TIME' | translate }}</a>
+                </div>
+            </div>
+            <form id="signup-form" ng-submit="processForm()">
+                <div id="form-views" ui-view></div>
+            </form>
+        </div>
+    </div>
+</div>

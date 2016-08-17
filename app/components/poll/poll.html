@@ -1,0 +1,136 @@
+<div class="row">
+    <div class="col-md-12">
+        <div id="form-container">
+            <div class="page-header text-center">
+                <h1>{{ data.title }}</h1>
+                <p style="color:grey">{{ 'POLL_FROM' | translate }} {{ data.name }}</p> <br>
+                <p>{{ 'POLL_LOCATION' | translate }} <a ng-href="https://maps.google.com/maps?q={{ data.location }}" target="_blank">{{ data.location }}</a></p><br>
+                <h4>{{ data.description }}</h4>
+            </div>
+
+            <div class="alert alert-danger" ng-show="error">
+                {{ errorText }}
+            </div>
+            <table class="table table-bordered text-center">
+                <thead>
+                <tr>
+                    <th id="firstcol"></th>
+                    <th ng-repeat="obj in tableContent track by $index" id="col-{{$index}}">{{ obj.visibleDate }}</th>
+                </tr>
+                <tr ng-if="noTimes">
+                    <th ng-if="noTimes"></th>
+                    <th ng-repeat="obj in tableContent track by $index">{{ obj.time }}</th>
+                </tr>
+                </thead>
+                <!-- Haupttabelle -->
+                <tr ng-repeat="user in data.users">
+                    <td ng-show="!user.editable" ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">{{ user.name }}&nbsp; <span ng-show="hoverEdit && !user.editable" class="glyphicon glyphicon-pencil hoveryellow" style="cursor: pointer;" ng-click="setEditMode(user)" title="{{ 'POLL_EDIT' | translate }}"></span>&nbsp;<span ng-show="hoverEdit && !user.editable" class="glyphicon glyphicon-trash hoverred" style="cursor: pointer;" ng-click="deleteUserPoll(user)" title="{{ 'POLL_DELETE' | translate }}"></span></td>
+                    <td ng-show="user.editable"><input type="text" ng-show="user.editable" style="text-align: center" ng-model="user.name" placeholder="{{ 'POLL_NAME' | translate }}" focus-on-show> <br><br><input type="text" placeholder="E-Mail (optional)" ng-model="user.email" ng-show="user.editable"> <span ng-show="hoverEdit && !user.editable" class="glyphicon glyphicon-pencil" style="cursor: pointer;" ng-click="setEditMode(user)"></span></td>
+                    <!-- Modus 0 und 1 -->
+                    <td ng-repeat="obj in tableContent track by $index" ng-show="!user.editable && data.maybe!= 2">
+                        <span class="glyphicon glyphicon-ok classgreen" ng-show="fillTable(obj, user)==1"></span>
+                        <span class="glyphicon glyphicon-remove classred" ng-show="fillTable(obj, user)==0"></span>
+                        <span class="glyphicon glyphicon-minus classyellow" ng-show="fillTable(obj, user)==2"></span>
+                    </td>
+                    <!-- Modus 2 -->
+                    <td ng-repeat="obj in tableContent track by $index" ng-show="!user.editable && data.maybe== 2">
+                        <span class="glyphicon glyphicon-ok classgreen" ng-show="fillTable(obj, user)==1"></span>
+                        <span class="glyphicon glyphicon-remove classred" ng-show="fillTable(obj, user)==0"></span>
+                        <span class="glyphicon glyphicon-question-sign classblue" ng-show="fillTable(obj, user)==2"></span>
+                    </td>
+                    <!-- Edit Modes -->
+                    <!-- Ja-(Ja)-Nein -->
+                    <td ng-show="data.maybe==1 && user.editable" ng-repeat="obj in tableContent track by $index">
+                        <a ng-if="data.maybe==1 && fillTable(obj, user)!=1" ng-click="editCell(obj, user, 1)" style="cursor: pointer;">{{ 'POLL_YES' | translate }}</a><span class="glyphicon glyphicon-ok classgreen" ng-show="fillTable(obj, user)==1"></span><br ng-if="data.maybe==1">
+                        <a ng-if="data.maybe==1 && fillTable(obj, user)!=2" ng-click="editCell(obj, user, 2)" style="cursor: pointer;">{{ 'POLL_YES2' | translate }}</a><span class="glyphicon glyphicon-minus classyellow" ng-show="fillTable(obj, user)==2"></span><br ng-if="data.maybe==1">
+                        <a ng-if="data.maybe==1 && fillTable(obj, user)!=0" ng-click="editCell(obj, user, 0)" style="cursor: pointer;">{{ 'POLL_NO' | translate }}</a> <span class="glyphicon glyphicon-remove classred" ng-show="fillTable(obj, user)==0"></span>
+                    </td>
+                    <!-- Ja-Vielleicht-Nein -->
+                    <td ng-show="data.maybe==2 && user.editable" ng-repeat="obj in tableContent track by $index">
+                        <a ng-if="data.maybe==2 && fillTable(obj, user)!=1" ng-click="editCell(obj, user, 1)" style="cursor: pointer;">{{ 'POLL_YES' | translate }}</a><span class="glyphicon glyphicon-ok classgreen" ng-show="fillTable(obj, user)==1"></span><br ng-if="data.maybe==2">
+                        <a ng-if="data.maybe==2 && fillTable(obj, user)!=2" ng-click="editCell(obj, user, 2)" style="cursor: pointer;">{{ 'POLL_MAYBE' | translate }}</a><span class="glyphicon glyphicon-question-sign classblue" ng-show="fillTable(obj, user)==2"></span><br ng-if="data.maybe==2">
+                        <a ng-if="data.maybe==2 && fillTable(obj, user)!=0" ng-click="editCell(obj, user, 0)" style="cursor: pointer;">{{ 'POLL_NO' | translate }}</a> <span class="glyphicon glyphicon-remove classred" ng-show="fillTable(obj, user)==0"></span>
+                    </td>
+                    <!-- Ja-Nein -->
+                    <td ng-show="data.maybe==0 && user.editable" ng-repeat="obj in tableContent track by $index">
+                        <a ng-if="data.maybe==0 && fillTable(obj, user)!=1" ng-click="editCell(obj, user, 1)" style="cursor: pointer;">{{ 'POLL_YES' | translate }}</a><span class="glyphicon glyphicon-ok classgreen" ng-show="fillTable(obj, user)==1"></span><br ng-if="data.maybe==0">
+                        <a ng-if="data.maybe==0 && fillTable(obj, user)!=0" ng-click="editCell(obj, user, 0)" style="cursor: pointer;">{{ 'POLL_NO' | translate }}</a> <span class="glyphicon glyphicon-remove classred" ng-show="fillTable(obj, user)==0"></span>
+                    </td>
+                </tr>
+                <!-- Neuer Benutzer -->
+                <tr ng-show="!editMode">
+                    <td ng-mouseover="showEmail=true" ng-mouseleave="showEmail=false">
+                        <input type="text" placeholder="{{ 'POLL_NAME' | translate }}" ng-model="name" ><br>
+                        <br>
+                        <input type="text" placeholder="{{ 'POLL_EMAIL_OPT' | translate }}" ng-model="informEmail" ng-show="showEmail || informEmail" class="fade-in-out">
+                    </td>
+                    <!-- Ja-Nein -->
+                    <td ng-repeat="obj in tableContent track by $index" ng-click="obj.checked = !obj.checked" ng-if="data.maybe==0">
+                        <input type="checkbox" onClick="event.stopPropagation();" ng-model="obj.checked" ng-if="data.maybe==0">
+                    </td>
+                    <!-- Ja-(Ja)-Nein -->
+                    <td ng-repeat="obj in tableContent track by $index" ng-if="data.maybe==1" >
+                        <a ng-if="data.maybe==1 && obj.checked!=1" ng-click="obj.checked=1" style="cursor: pointer;">{{ 'POLL_YES' | translate }}</a><span class="glyphicon glyphicon-ok classgreen" ng-show="obj.checked==1"></span><br ng-if="data.maybe==1">
+                        <a ng-if="data.maybe==1 && obj.checked!=2" ng-click="obj.checked=2" style="cursor: pointer;">{{ 'POLL_YES2' | translate }}</a><span class="glyphicon glyphicon-minus classyellow" ng-show="obj.checked==2"></span><br ng-if="data.maybe==1">
+                        <a ng-if="data.maybe==1 && obj.checked!=0" ng-click="obj.checked=0" style="cursor: pointer;">{{ 'POLL_NO' | translate }}</a> <span class="glyphicon glyphicon-remove classred" ng-show="obj.checked==0"></span>
+                    </td>
+                    <!-- Ja-Vielleicht-Nein -->
+                    <td ng-repeat="obj in tableContent track by $index" ng-if="data.maybe==2" >
+                        <a ng-if="data.maybe==2 && obj.checked!=1" ng-click="obj.checked=1" style="cursor: pointer;">{{ 'POLL_YES' | translate }}</a><span class="glyphicon glyphicon-ok classgreen" ng-show="obj.checked==1"></span><br ng-if="data.maybe==2">
+                        <a ng-if="data.maybe==2 && obj.checked!=2" ng-click="obj.checked=2" style="cursor: pointer;">{{ 'POLL_MAYBE' | translate }}</a><span class="glyphicon glyphicon-question-sign classblue" ng-show="obj.checked==2"></span><br ng-if="data.maybe==2">
+                        <a ng-if="data.maybe==2 && obj.checked!=0" ng-click="obj.checked=0" style="cursor: pointer;">{{ 'POLL_NO' | translate }}</a> <span class="glyphicon glyphicon-remove classred" ng-show="obj.checked==0"></span>
+                    </td>
+                </tr>
+
+                <tr ng-if="data.maybe==1">
+                    <td>Ja:<br>(Ja):<br>Nein:</td>
+                    <td ng-repeat="obj1 in resultCount track by $index">{{ obj1.ok }}<br>{{ obj1.maybe }}<br>{{ obj1.no }}</td>
+                </tr>
+                <tr ng-if="data.maybe==2">
+                    <td>Ja:<br>Vielleicht:<br>Nein:</td>
+                    <td ng-repeat="obj1 in resultCount track by $index">{{ obj1.ok }}<br>{{ obj1.maybe }}<br>{{ obj1.no }}</td>
+                </tr>
+                <tr ng-if="data.maybe==0">
+                    <td></td>
+                    <td ng-repeat="obj1 in resultCount track by $index"><span>{{ obj1.ok }}</span></td>
+                </tr>
+
+                <tr class="tablenoborder">
+                    <td class="tablenoborder"></td>
+                    <td ng-repeat="obj in resultCount track by $index" class="tablenoborder"><span class="glyphicon glyphicon-chevron-up classgreen" ng-show="obj.max==true"></span></td>
+                </tr>
+            </table>
+            <center>
+            <button ng-show="!editMode" class="btn btn-primary" ng-click="addUserPoll()">{{ 'POLL_SAVE' | translate }}</button>
+            <button ng-show="editMode" class="btn btn-primary" ng-click="saveUserPoll()">{{ 'POLL_SAVE' | translate }}</button>
+            </center><br>
+            <div ng-show="showEmail || informEmail || editMode" class="fade-in-out">{{ 'POLL_INFOMESSAGE1' | translate }}</div>
+            <div ng-show="showEmail || informEmail || editMode" class="fade-in-out">{{ 'POLL_INFOMESSAGE2' | translate }}</div>
+            <br>
+
+            <h3>{{ 'POLL_COMMENT' | translate }}</h3>
+            <a ng-click="toggleAddComment()" style="cursor: pointer;">{{ 'POLL_ADD_COMMENT' | translate }} <span class="glyphicon glyphicon-triangle-bottom"></span></a><br><br><br>
+            <form name="pollInfosForm1" id="pollInfosForm1" ng-submit="saveComment(pollInfosForm1.$valid)" ng-show="showAddComment" class="fade-in-out">
+                <div class="form-group">
+                    <label>{{ 'POLL_NAME' | translate }}</label> <span ng-class="pollInfosForm1.name.$valid ? 'glyphicon glyphicon-asterisk' : 'glyphicon glyphicon-asterisk classred'"></span>
+                    <input type="text" class="form-control" name="name" ng-model="formData.name" ng-required="true" ng-maxlength="80" style="width: 500px;">
+                </div>
+                <div class="form-group">
+                    <label>{{ 'POLL_COMMENT' | translate }}</label>
+                    <textarea class="form-control noresize" rows="3" name="kommentar" ng-model="formData.comment" ng-required="true" ng-maxlength="5000" style="width: 500px;" ng-required="true"></textarea>
+                </div>
+                <button type="submit" class="btn btn-info">{{ 'POLL_SAVE_COMMENT' | translate }}</button><br><br><br>
+            </form>
+
+            <div class="panel panel-custom" style="width: 600px"  ng-repeat="comment in comments">
+                <div ng-show="!comment.editable" class="panel-heading" style="height: 40px" ng-mouseover="comment.showOptions=true" ng-mouseleave="comment.showOptions=false">{{ comment.name }} - {{ comment.date }} <span class="glyphicon glyphicon-trash hoverred" style="float: right; cursor: pointer;" ng-click="deleteComment(comment)" title="{{ 'POLL_DELETE' | translate }}" ng-show="comment.showOptions"></span><span class="glyphicon glyphicon-edit hoveryellow" style="float: right; cursor: pointer;" ng-click="setEditableTrue(comment)" title="{{ 'POLL_EDIT' | translate }}" ng-show="comment.showOptions">&nbsp;</span></div>
+                <div ng-show="!comment.editable" class="panel-body angular-with-newlines" ng-mouseover="comment.showOptions=true" ng-mouseleave="comment.showOptions=false">{{ comment.comment}}</div>
+                <div ng-show="comment.editable" class="panel-heading" style="height: 40px"><input type="text" class="classgreenbackground" ng-model="comment.name"> - {{ comment.date }} <span class="glyphicon glyphicon-trash hoverred" style="float: right; cursor: pointer;" ng-click="deleteComment(comment)" title="{{ 'POLL_DELETE' | translate }}"></span><span class="glyphicon glyphicon-floppy-save hovergreen" style="float: right; cursor: pointer;" ng-click="changeComment(comment)" title="Speichern">&nbsp;</span></div>
+                <div ng-show="comment.editable" class="panel-body"><textarea class="form-control noresize classgreybackround" ng-model="comment.comment">{{ comment.comment}}</textarea></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{loaded()}}
+

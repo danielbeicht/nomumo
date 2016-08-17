@@ -1,0 +1,35 @@
+<div class="alert alert-warning" ng-show="warningMessage">
+    {{ warningText }}
+</div>
+
+<h4>{{ 'FORM_TIME_TEXT' | translate }}</h4>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        <th>{{ 'FORM_TIME_TIME' | translate }} 1</th>
+        <th>{{ 'FORM_TIME_TIME' | translate }} 2</th>
+        <th>{{ 'FORM_TIME_TIME' | translate }} 3</th>
+        <th ng-repeat="time in times">{{ 'FORM_TIME_TIME' | translate }} {{ time.time }}</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="date in formData.dates">
+        <td><span class="glyphicon glyphicon-trash hoverred" ng-click="removeDate(date)"
+                  style="cursor: pointer;"></span></td>
+        <td>{{ date.date }}</td>
+        <td><input type="text" ng-model="date.time[0]" ng-change="checkDuplicates()"></td>
+        <td><input type="text" ng-model="date.time[1]" ng-change="checkDuplicates()"></td>
+        <td><input type="text" ng-model="date.time[2]" ng-change="checkDuplicates()"></td>
+        <td ng-repeat="time in times"><input type="text" ng-model="date.time[[time.model]]" ng-change="checkDuplicates()"></td>
+    </tr>
+</table>
+
+
+<button class="btn btn-primary" ng-click="addTime()">{{ 'FORM_TIME_ADD_FIELD' | translate }}</button>
+
+
+<div class="text-center">
+    <button class="btn btn-success" ng-click="submitForm()">{{ 'FORM_TIME_CREATE_POLL' | translate }}</button>
+</div>
