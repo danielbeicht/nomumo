@@ -12,17 +12,6 @@
         $scope.showAddComment = false;
 
 
-        $scope.$watch('language', function(newValue, oldValue) {
-            if (newValue){
-                $translate.use(newValue).then(function (newValue) {
-                    console.log("Sprache zu " + newValue + " gewechselt.");
-                    $scope.init();
-                }, function (key) {
-                    console.log("Irgendwas lief schief.");
-                });
-            }
-        });
-
         $scope.fillTable = function (obj, user) {
             if (obj.time == null) {
                 for (var j = 0; j < user.userPollDates.length; j++) {

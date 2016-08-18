@@ -51,7 +51,7 @@
 </div>
 
 <!-- Footer -->
-<footer class="footer">
+<footer class="footer" ng-controller="languageCtrl">
     <div class="container text-center">
         <p class="text-muted">
             <select name="singleSelect" ng-model="language" class="classgreybackgroundgreycolor">
@@ -80,6 +80,7 @@
 <script src="app/app.routes.js"></script>
 <script src="app/app.config.js"></script>
 
+<script src="app/components/languageCtrl.js"></script>
 <script src="app/components/home/homeCtrl.js"></script>
 <script src="app/components/poll/pollCtrl.js"></script>
 <script src="app/components/created/createdCtrl.js"></script>
