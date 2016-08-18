@@ -7,6 +7,7 @@
             'ngAnimate',
             'ui.bootstrap',
             'ngRoute',
+            'ngCookies',
             'google.places',
             'angular-clipboard',
             'pascalprecht.translate'

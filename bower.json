@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "angular-translate": "^2.11.1",
-    "angular-clipboard": "^1.4.2"
+    "angular-clipboard": "^1.4.2",
+    "angular-cookies": "^1.5.8"
   }
 }
