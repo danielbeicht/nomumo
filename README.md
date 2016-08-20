@@ -15,7 +15,7 @@ After this run the following line from the api-folder to install all backend-dep
 npm install
 ```
 
-To create the MySQL-tables you need to enter following CREATE-statements in your MySQL-instance.
+To create the MySQL tables you need to enter following CREATE statements in your MySQL instance.
 ```bash
 CREATE DATABASE `nomumo` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
@@ -103,7 +103,7 @@ CREATE TABLE `comments` (
 
 
 ## Start
-To start the webserver type in following line from the api-directory.
+To start the webserver type in following line from the api directory.
 ```bash
 node main.js
 ```
