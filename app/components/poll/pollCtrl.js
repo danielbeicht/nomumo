@@ -341,7 +341,7 @@
                     if (multiple>1){
                         var max = 0;
                         for (var i=0; i<$scope.resultCount.length; i++){
-                            if ($scope.resultCount[i].ok>max){
+                            if ($scope.resultCount[i].ok>max && $scope.resultCount[i].max == true){
                                 max = $scope.resultCount[i].ok;
                             }
                         }
