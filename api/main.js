@@ -124,7 +124,10 @@ app.post('/changeUserPoll', function (req, res) {
         connection.query("UPDATE users SET name = ?, email = ? WHERE userID = ?", [req.body.user.name, req.body.user.email, req.body.user.userID], function (err, result) {
             if (err){
                 console.log(err);
-            }
+				res.send("Error");
+            } else {
+				res.send("OK");
+			}
         });
     });
 });
