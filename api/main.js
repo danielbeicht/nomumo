@@ -309,9 +309,7 @@ app.post('/addUserPoll', function (req, res) {
                         function performQueryInsertPollDateTime(lineitem, callback) {
                             // Insert userpolldate-process
                             if (lineitem.time == null) {
-                                var dateVar = new Date(lineitem.date);
-                                dateVar = dateVar.toISOString();
-                                dateVar = dateVar.substring(0, 10);
+                                var dateVar = lineitem.date;
                                 // Get PollDateID (need for userpolldates
                                 connection.query("SELECT pollDateID FROM polldates WHERE pollID = ? AND date= ?", [req.body.pollID, dateVar], function (err, result) {
                                     if (err) return callback(err);
@@ -331,10 +329,7 @@ app.post('/addUserPoll', function (req, res) {
                                 });
 
                             } else {    // Insert userpolltime-process
-                                var dateVar = new Date(lineitem.date);
-                                dateVar = dateVar.toISOString();
-
-                                dateVar = dateVar.substring(0, 10);
+                                var dateVar = lineitem.date;
 
                                 connection.query("SELECT pollDateID FROM polldates WHERE pollID = ? AND date = ?", [req.body.pollID, dateVar], function (err, result) {
                                     if (err) return callback(err);
