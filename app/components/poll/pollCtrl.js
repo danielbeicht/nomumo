@@ -210,7 +210,7 @@
                     if (timesCount == 0) {
                         var obj = new Object();
                         if ($translate.use()=="de_DE"){
-                            obj.visibleDate = weekdayDE[new Date($scope.data.dates[i].date).getDay()] + "\n" + $scope.getDateString($scope.data.dates[i].date);
+                            obj.visibleDate = weekdayDE[new Date($scope.data.dates[i].date.replace(/-/g, "/")).getDay()] + "\n" + $scope.getDateString($scope.data.dates[i].date);
                         } else {
                             obj.visibleDate = weekdayEN[new Date($scope.data.dates[i].date).getDay()] + "\n" + $scope.getDateString($scope.data.dates[i].date);
                         }
@@ -226,6 +226,7 @@
                         for (var j = 0; j < timesCount; j++) {
                             var obj = new Object();
                             if (j == 0) {
+
                                 if ($translate.use()=="de_DE"){
                                     obj.visibleDate = weekdayDE[new Date($scope.data.dates[i].date).getDay()] + "\n" + $scope.getDateString($scope.data.dates[i].date);
                                 } else {
@@ -419,7 +420,7 @@
 
 
         $scope.getDateString = function(date){
-            return new Date(date).toLocaleDateString();
+            return new Date(date.replace(/-/g, "/")).toLocaleDateString();
         }
 
         $scope.toggleAddComment = function(){
