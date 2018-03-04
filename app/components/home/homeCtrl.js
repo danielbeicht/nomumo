@@ -13,12 +13,9 @@
         $scope.times = [];
         $scope.timesCount = 3;
 
-        //$scope.location = $translate.use();
-        //console.log($scope.location);
-
         $scope.getPollModeImageLocation = function(){
             console.log($scope.location);
-            if ($scope.location == "de_DE" || $scope.location == "de"){
+            if ($translate.use() === "de_DE" || $translate.use() === "de"){
                 return "de";
             } else {
                 return "eng";
@@ -140,7 +137,6 @@
                 return -1;
             if (a.date > b.date)
                 return 1;
-            console.log("hier");
             return 0;
         }
 
