@@ -9,9 +9,11 @@
     function homeCtrl($scope, $filter, $http, $window, $state, $rootScope, $translate) {
         $scope.formData = {};
         $scope.formData.dates = [];
+        $scope.formData.pollOptions = [];
         $scope.formData.maybe = 1;
         $scope.times = [];
         $scope.timesCount = 3;
+
 
         $scope.getPollModeImageLocation = function(){
             console.log($scope.location);
@@ -36,6 +38,10 @@
                     }
                 }
             });
+
+        $scope.addPollOption = function () {
+            $scope.formData.pollOptions.push({pollOptionName: "", pollOptionColor: "", pollOptionWeight: 0, pollOptionIcon: ""})
+        };
 
 
         $scope.submitForm = function () {
@@ -82,6 +88,10 @@
                 }
 
             }
+        };
+
+        $scope.goNextFromAddPollOptions = function () {
+            $state.go('home.pollDate');
         };
 
 

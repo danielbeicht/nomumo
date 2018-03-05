@@ -11,6 +11,15 @@
   "dependencies": {
     "angular-translate": "^2.11.1",
     "angular-clipboard": "^1.4.2",
-    "angular-cookies": "^1.5.8"
-  }
+    "angular-cookies": "^1.5.8",
+    "angular-color-picker": "angularjs-color-picker#^3.4.8"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/libs",
+    "test",
+    "tests"
+  ]
 }

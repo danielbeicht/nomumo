@@ -10,6 +10,8 @@
             'ngCookies',
             'google.places',
             'angular-clipboard',
-            'pascalprecht.translate'
+            'pascalprecht.translate',
+            'color.picker',
+            'ui-iconpicker'
         ]);
 })();
