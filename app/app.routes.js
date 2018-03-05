@@ -30,6 +30,11 @@
                 templateUrl: 'app/components/home/form-pollDateTime.html'
             })
 
+            .state('home.pollOption', {
+                url: '/pollOption',
+                templateUrl: 'app/components/home/form-pollOption.html'
+            })
+
             .state('poll', {
                 url: "/poll/:pollID",
                 templateUrl: 'app/components/poll/poll.html',

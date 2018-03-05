@@ -5,9 +5,14 @@
                 <h1>nomumo</h1>
 
                 <div id="status-buttons" class="text-center">
-                    <a ui-sref-active="active" ui-sref=".pollInfos"><span>1</span> {{ 'TITLE_POLLDETAILS' | translate }}</a>
-                    <a ui-sref-active="active" ui-sref=".pollDate"><span>2</span> {{ 'TITLE_DATE' | translate }}</a>
-                    <a ui-sref-active="active" ui-sref=".pollDateTime"><span>3</span> {{ 'TITLE_TIME' | translate }}</a>
+                    <a ui-sref-active="active" ui-sref=".pollInfos" ng-show="formData.maybe != 3"><span>1</span> {{ 'TITLE_POLLDETAILS' | translate }}</a>
+                    <a ui-sref-active="active" ui-sref=".pollDate" ng-show="formData.maybe != 3"><span>2</span> {{ 'TITLE_DATE' | translate }}</a>
+                    <a ui-sref-active="active" ui-sref=".pollDateTime" ng-show="formData.maybe != 3"><span>3</span> {{ 'TITLE_TIME' | translate }}</a>
+
+                    <a ui-sref-active="active" ui-sref=".pollInfos" ng-show="formData.maybe == 3"><span>1</span> {{ 'TITLE_POLLDETAILS' | translate }}</a>
+                    <a ui-sref-active="active" ui-sref=".pollOption" ng-show="formData.maybe == 3"><span>2</span> Umfrageoptionen</a>
+                    <a ui-sref-active="active" ui-sref=".pollDate" ng-show="formData.maybe == 3"><span>3</span> {{ 'TITLE_DATE' | translate }}</a>
+                    <a ui-sref-active="active" ui-sref=".pollDateTime" ng-show="formData.maybe == 3"><span>4</span> {{ 'TITLE_TIME' | translate }}</a>
                 </div>
             </div>
             <form id="signup-form" ng-submit="processForm()">

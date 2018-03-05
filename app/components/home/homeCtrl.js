@@ -46,7 +46,6 @@
                 for (var i = 0; i < $scope.formData.dates.length; i++) {
                     var length = $scope.formData.dates[i].time.length;
                     for (var j = length - 1; j >= 0; j--) {
-                        console.log("test");
                         if ($scope.formData.dates[i].time[j] == "") {
                             $scope.formData.dates[i].time.splice(j, 1);
                         } else {
@@ -68,20 +67,22 @@
 
         };
 
-        $scope.goToDatum = function(isValid){
-            // Change Location (googles fault)
-            console.log($scope.formData.location);
+        $scope.goNextFromPollInfos = function(isValid) {
             if ($scope.formData.location){
                 if ($scope.formData.location.formatted_address) {
                     $scope.formData.location = $scope.formData.location.formatted_address;
                 }
             }
+
             if (isValid) {
-                $state.go('home.pollDate');
-            } else {
-                console.log("False");
+                if ($scope.formData.maybe != 3) {
+                    $state.go('home.pollDate');
+                } else {
+                    $state.go('home.pollOption');
+                }
+
             }
-        }
+        };
 
 
         $scope.goToUhrzeit = function(){
@@ -127,6 +128,16 @@
         });
 
 
+        $scope.$watch('formData.maybe', function(newValue, oldValue) {
+            console.log(newValue)
+
+
+
+        });
+
+
+
+
         function compare(a,b) {
             if (a.date < b.date)
                 return -1;
@@ -134,8 +145,6 @@
                 return 1;
             return 0;
         }
-
-
 
 
         function isDateInDates(date){
@@ -197,7 +206,6 @@
                         return true;
                     }
                 }
-
                 return false;
             }
         }
