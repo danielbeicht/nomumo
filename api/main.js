@@ -75,19 +75,17 @@ app.post('/changeUserPoll', function (req, res) {
     var userID = req.body.user.userID;
     console.log(userID);
 
-    connection.beginTransaction(function (err) {
+    connection.beginTransaction(function () {
 
         async.each(req.body.user.userPollDates, performQueryUpdateUserPollDate, function (err) {
 
             if (err) {
                 connection.rollback();
                 console.log(err);
-                return;
             }
         });
 
-        function performQueryUpdateUserPollDate(lineitem, callback) {
-            //connection.query("UPDATE userpolldates SET result = " + lineitem.result + " WHERE userPollDateID = " + lineitem.userPollDateID, function (err, result) {
+        function performQueryUpdateUserPollDate(lineitem) {
             connection.query("UPDATE userpolldates SET result = ? WHERE userPollDateID = ?", [lineitem.result, lineitem.userPollDateID], function (err, result) {
 
             });
@@ -99,11 +97,10 @@ app.post('/changeUserPoll', function (req, res) {
             if (err) {
                 connection.rollback();
                 console.log(err);
-                return;
             }
         });
 
-        function performQueryUpdateUserPollTime(lineitem, callback) {
+        function performQueryUpdateUserPollTime(lineitem) {
             connection.query("UPDATE userpolltimes SET result = ? WHERE userPollTimeID = ?", [lineitem.result, lineitem.userPollTimeID], function (err, result) {
 
             });
@@ -121,7 +118,7 @@ app.post('/changeUserPoll', function (req, res) {
         });
 
         console.log(req.body.user.email);
-        connection.query("UPDATE users SET name = ?, email = ? WHERE userID = ?", [req.body.user.name, req.body.user.email, req.body.user.userID], function (err, result) {
+        connection.query("UPDATE users SET name = ?, email = ? WHERE userID = ?", [req.body.user.name, req.body.user.email, req.body.user.userID], function (err) {
             if (err){
                 console.log(err);
 				res.send("Error");
@@ -134,16 +131,14 @@ app.post('/changeUserPoll', function (req, res) {
 
 
 app.post('/saveComment', function (req, res) {
-    console.log (req.body);
-
-    var post = {
+    let post = {
         name: req.body.name,
         pollID: req.body.pollID,
         comment: req.body.comment,
         date: new Date()
     };
 
-    connection.query("INSERT INTO comments SET ?", post, function (err, result) {
+    connection.query("INSERT INTO comments SET ?", post, function (err) {
         if (err){
             res.send("Error");
         } else {
@@ -153,8 +148,8 @@ app.post('/saveComment', function (req, res) {
 
 
     connection.query("SELECT email, name, userHash FROM users WHERE pollID = ?", [req.body.pollID], function (err, result) {
-        for (var i=0; i<result.length; i++){
-            var mailOptions = {
+        for (let i=0; i<result.length; i++){
+            let mailOptions = {
                 from: '"Nomumo 👥" <nomumo@mz-host.de>', // sender address
                 to: result[i].email, // list of receivers
                 subject: 'nomumo - Neuer Kommentar', // Subject line
@@ -162,22 +157,21 @@ app.post('/saveComment', function (req, res) {
             };
 
             // send mail with defined transport object
-            transporter.sendMail(mailOptions, function(error, info){
+            transporter.sendMail(mailOptions, function(error){
                 if(error){
                     return console.log(error);
                 }
             });
         }
     });
-
 });
 
 app.post('/deleteComment', function (req, res) {
-    var post = {
+    let post = {
         commentID: req.body.commentID
     };
 
-    connection.query("DELETE FROM comments WHERE ?", post, function (err, result) {
+    connection.query("DELETE FROM comments WHERE ?", post, function (err) {
         if (err){
             res.send("Error");
         } else {
@@ -187,7 +181,7 @@ app.post('/deleteComment', function (req, res) {
 });
 
 app.post('/changeComment', function (req, res) {
-    connection.query("UPDATE comments SET name = ?, comment = ? WHERE commentID = ?", [req.body.name, req.body.comment, req.body.commentID], function (err, result) {
+    connection.query("UPDATE comments SET name = ?, comment = ? WHERE commentID = ?", [req.body.name, req.body.comment, req.body.commentID], function (err) {
         if (err){
             res.send("Error");
         } else {
@@ -210,10 +204,10 @@ app.get('/getComments', function (req, res) {
 app.post('/deleteUserPoll', function (req, res) {
     var userID = req.body.userID;
 
-    connection.beginTransaction(function (err) {
-        connection.query("DELETE FROM userpolltimes WHERE userID = ?", [userID],  function (err, result) {
-            connection.query("DELETE FROM userpolldates WHERE userID = ?", [userID],  function (err, result) {
-                connection.query("DELETE FROM users WHERE userID = ?", [userID],  function (err, result) {
+    connection.beginTransaction(function () {
+        connection.query("DELETE FROM userpolltimes WHERE userID = ?", [userID],  function () {
+            connection.query("DELETE FROM userpolldates WHERE userID = ?", [userID],  function () {
+                connection.query("DELETE FROM users WHERE userID = ?", [userID],  function () {
             // Commit Transaction
             connection.commit(function (err) {
                 if (err) {
@@ -232,9 +226,9 @@ app.post('/deleteUserPoll', function (req, res) {
 
 
 app.post('/unsubscribe', function (req, res) {
-    var responseObject = new Object();
+    let responseObject = {};
 
-    connection.query("UPDATE users SET email = NULL WHERE userHash = ? AND pollID = ?", [req.body.userHash, req.body.pollID], function (err, result) {
+    connection.query("UPDATE users SET email = NULL WHERE userHash = ? AND pollID = ?", [req.body.userHash, req.body.pollID], function (err) {
         if (err){
             responseObject.statusCode = 1;
             res.send(responseObject);
@@ -248,21 +242,21 @@ app.post('/unsubscribe', function (req, res) {
 
 app.post('/addUserPoll', function (req, res) {
     var content = req.body.content;
-    connection.beginTransaction(function (err) {
+    connection.beginTransaction(function () {
 
         // Generate UserHash
         var userHash = 0;
-        while (userHash == 0) {
+        while (userHash === 0) {
             userHash = randomAsciiString(8);
             var sql = "SELECT * FROM users WHERE userHash='" + userHash + "'";
             connection.query(sql, function (err, results) {
-                if (results.length != 0) {
+                if (results.length !== 0) {
                     userHash = 0;
                 }
             });
         }
 
-        var post = {};
+        let post = {};
         if (!req.body.informEmail){
             post = {
                 name: req.body.name,
@@ -286,9 +280,9 @@ app.post('/addUserPoll', function (req, res) {
                 });
             }
             // If username doesn't exists
-            if (result.length == 0) {
+            if (result.length === 0) {
                 // Insert username in DB
-                connection.query('INSERT INTO users SET ?', post, function (err, result) {
+                connection.query('INSERT INTO users SET ?', post, function (err) {
                     if (err) {
                         return connection.rollback(function () {
                             throw err;
@@ -296,8 +290,7 @@ app.post('/addUserPoll', function (req, res) {
                     }
                     // Get userID (need for userpolldate)
                     connection.query("SELECT userID, userHash FROM users WHERE name = ? AND pollID = ?", [req.body.name, req.body.pollID],function (err, result) {
-                        var userID = result[0].userID;
-                        var userHash = result[0].userHash;
+                        let userID = result[0].userID;
 
                         // Insert userpolldate/userpolltime in DB
                         async.each(content, performQueryInsertPollDateTime, function (err) {
@@ -305,25 +298,24 @@ app.post('/addUserPoll', function (req, res) {
                             if (err) {
                                 connection.rollback();
                                 console.log(err);
-                                return;
                             }
                         });
 
                         function performQueryInsertPollDateTime(lineitem, callback) {
                             // Insert userpolldate-process
                             if (lineitem.time == null) {
-                                var dateVar = lineitem.date;
+                                let dateVar = lineitem.date;
                                 // Get PollDateID (need for userpolldates
                                 connection.query("SELECT pollDateID FROM polldates WHERE pollID = ? AND date= ?", [req.body.pollID, dateVar], function (err, result) {
                                     if (err) return callback(err);
 
                                     // Insert userpolldate
-                                    var post = {
+                                    let post = {
                                         userID: userID,
                                         result: lineitem.checked,
                                         pollDateID: result[0].pollDateID
                                     };
-                                    connection.query("INSERT INTO userpolldates SET ?", post, function (err, rows) {
+                                    connection.query("INSERT INTO userpolldates SET ?", post, function (err) {
                                         if (err) {
                                             return callback(err);
                                         }
@@ -342,14 +334,14 @@ app.post('/addUserPoll', function (req, res) {
                                         if (err) return callback(err);
 
 
-                                        var post = {
+                                        let post = {
                                             userID: userID,
                                             result: lineitem.checked,
                                             pollDateTimeID: result[0].pollDateTimesID
                                         };
 
 
-                                        connection.query("INSERT INTO userpolltimes SET ?", post, function (err, rows) {
+                                        connection.query("INSERT INTO userpolltimes SET ?", post, function (err) {
                                             if (err) {
                                                 return callback(err);
                                             }
@@ -368,7 +360,7 @@ app.post('/addUserPoll', function (req, res) {
                                 });
                             }
 
-                            var mailOptions = {
+                            let mailOptions = {
                                 from: '"Nomumo 👥" <nomumo@mz-host.de>', // sender address
                                 to: result[0].email, // list of receivers
                                 subject: 'nomumo - Neuer Teilnehmer', // Subject line
@@ -395,7 +387,7 @@ app.post('/addUserPoll', function (req, res) {
                         });
 
 
-                        var obj = new Object();
+                        let obj = {};
                         obj.code = 0;
                         res.send(JSON.stringify(obj));
                     });
@@ -404,7 +396,7 @@ app.post('/addUserPoll', function (req, res) {
 
 
             } else {
-                var obj = new Object();
+                let obj = {};
                 obj.code = 1;
                 res.send(JSON.stringify(obj));
             }
@@ -418,19 +410,19 @@ app.post('/addUserPoll', function (req, res) {
 
 app.post('/createPoll', function (req, res) {
     // Generate PollID
-    var pollID = 0;
-    while (pollID == 0) {
+    let pollID = 0;
+    while (pollID === 0) {
         pollID = randomAsciiString(8);
-        var sql = "SELECT * FROM polls WHERE pollID='" + pollID + "'";
+        let sql = "SELECT * FROM polls WHERE pollID='" + pollID + "'";
         connection.query(sql, function (err, results) {
-            if (results.length != 0) {
+            if (results.length !== 0) {
                 pollID = 0;
             }
         });
     }
     // Insert Poll in DB
-    var urlID = pollID;
-    var post = {
+    let urlID = pollID;
+    let post = {
         pollID: pollID,
         title: req.body.title,
         location: req.body.location,
@@ -439,23 +431,23 @@ app.post('/createPoll', function (req, res) {
         email: req.body.email,
         maybe: req.body.maybe
     };
-    var query = connection.query('INSERT INTO polls SET ?', post, function (err, result) {
+    let query = connection.query('INSERT INTO polls SET ?', post, function (err, result) {
 
     });
 
     // Transaction
     // For all dates
-    var dates = req.body.dates;
-    for (var i = 0; i < dates.length; i++) {
+    let dates = req.body.dates;
+    for (let i = 0; i < dates.length; i++) {
         // Insert polldate into DB
         (function () {
-            var ki = i;
-            var post = {date: dates[ki].date, pollID: urlID};
+            let ki = i;
+            let post = {date: dates[ki].date, pollID: urlID};
             connection.beginTransaction(function (err) {
                 if (err) {
                     throw err;
                 }
-                connection.query('INSERT INTO polldates SET ?', post, function (err, result) {
+                connection.query('INSERT INTO polldates SET ?', post, function (err) {
                     if (err) {
                         return connection.rollback(function () {
                             throw err;
@@ -470,13 +462,12 @@ app.post('/createPoll', function (req, res) {
                         }
 
                         // Insert pollDateTimes in DB
-                        var counter = 0;
+                        let counter = 0;
                         async.each(dates[ki].time, performQueryInsertPollDateTime, function (err) {
 
                             if (err) {
                                 connection.rollback();
                                 console.log(err);
-                                return;
                             }
                         });
 
@@ -484,7 +475,7 @@ app.post('/createPoll', function (req, res) {
                             ++counter;
                             var post = {time: lineitem, pollDateID: result[0].pollDateID, timeCountOnDay: counter};
 
-                            connection.query("INSERT INTO polldatetimes SET ?", post, function (err, rows) {
+                            connection.query("INSERT INTO polldatetimes SET ?", post, function (err) {
                                 if (err) return callback(err);
                                 callback();
                             });
@@ -503,7 +494,7 @@ app.post('/createPoll', function (req, res) {
             });
         }());
     }
-    var mailOptions = {
+    let mailOptions = {
         from: '"Nomumo 👥" <nomumo@mz-host.de>', // sender address
         to: req.body.email, // list of receivers
         subject: 'nomumo - ' + req.body.title, // Subject line
@@ -523,10 +514,10 @@ app.post('/createPoll', function (req, res) {
 
 app.get('/getpoll', function (req, res) {
     console.log("GetPoll called");
-    var pollID = req.query.pollid;
-    var poll = new Object();
+    let pollID = req.query.pollid;
+    let poll = {};
 
-    connection.beginTransaction(function (err) {
+    connection.beginTransaction(function () {
         connection.query("SELECT * FROM polls WHERE pollID = ?", [pollID], function (err, result) {
             poll.pollID = pollID;
             poll.location = result[0].location;
@@ -544,7 +535,6 @@ app.get('/getpoll', function (req, res) {
                     if (err) {
                         connection.rollback();
                         console.log(err);
-                        return;
                     }
                 });
 
@@ -561,13 +551,11 @@ app.get('/getpoll', function (req, res) {
                 connection.query("SELECT userID, name, pollID FROM users WHERE pollID = ?", [pollID], function (err, result) {
                     poll.users = result;
 
-
                     // Get User Dates
                     async.each(poll.users, performQueryGetUserPollDates, function (err) {
                         if (err) {
                             connection.rollback();
                             console.log(err);
-                            return;
                         }
                     });
 
@@ -586,7 +574,6 @@ app.get('/getpoll', function (req, res) {
                         if (err) {
                             connection.rollback();
                             console.log(err);
-                            return;
                         }
                     });
 
@@ -606,8 +593,8 @@ app.get('/getpoll', function (req, res) {
                         });
                     }
 
-                    for (var i = 0; i < poll.dates.length; i++) {
-                        var date = new Date(poll.dates[i].date);
+                    for (let i = 0; i < poll.dates.length; i++) {
+                        let date = new Date(poll.dates[i].date);
                         date = date.toLocaleDateString()
                         poll.dates[i].date = date;
 
@@ -629,7 +616,6 @@ app.get('/*', function (req, res) {
 
 
 var server = app.listen(81, function () {
-    var host = server.address().address;
-    var port = server.address().port;
+    let port = server.address().port;
     console.log("Server is running on Port", port);
 });
