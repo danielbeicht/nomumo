@@ -26,17 +26,17 @@ function randomString(length, chars) {
         throw new Error('Argument \'chars\' is undefined');
     }
 
-    var charsLength = chars.length;
+    let charsLength = chars.length;
     if (charsLength > 256) {
         throw new Error('Argument \'chars\' should not have more than 256 characters'
             + ', otherwise unpredictability will be broken');
     }
 
-    var randomBytes = crypto.randomBytes(length);
-    var result = new Array(length);
+    let randomBytes = crypto.randomBytes(length);
+    let result = new Array(length);
 
-    var cursor = 0;
-    for (var i = 0; i < length; i++) {
+    let cursor = 0;
+    for (let i = 0; i < length; i++) {
         cursor += randomBytes[i];
         result[i] = chars[cursor % charsLength];
     }
@@ -49,7 +49,7 @@ function randomAsciiString(length) {
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 }
 
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
     host: '',
     user: '',
     password: '',
@@ -57,10 +57,7 @@ var connection = mysql.createConnection({
 });
 
 // create reusable transporter object using the default SMTP transport
-var transporter = nodemailer.createTransport('smtp://');
-
-
-
+let transporter = nodemailer.createTransport('smtp://');
 
 
 
